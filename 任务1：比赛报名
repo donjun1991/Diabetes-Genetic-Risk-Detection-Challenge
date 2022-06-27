@@ -1,0 +1,10 @@
+import pandas as pd
+
+train_df = pd.read_csv("C:/Users/donju/Desktop/datawhale竞赛/糖尿病挑战赛/下载数据/比赛训练集.csv", encoding="gbk")
+test_df = pd.read_csv("C:/Users\donju/Desktop/datawhale竞赛/糖尿病挑战赛/下载数据/比赛测试集.csv", encoding="gbk")
+
+print(train_df.shape)
+print(train_df.dtypes)
+print(train_df.)
+print(test_df.shape)
+print(test_df.dtypes)
