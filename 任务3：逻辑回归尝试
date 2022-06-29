@@ -1,0 +1,39 @@
+1.成绩：
+您当前最佳成绩为0.72302提交时间为 2022-06-29 16:50:50 具体成绩请前往提交结果页面,查看提交记录
+（注：以当前所在团队提交的最佳成绩为准）
+2.代码
+import pandas as pd
+from sklearn.linear_model import LogisticRegressionCV
+
+#提取数据
+train_df = pd.read_csv("../下载数据/比赛训练集.csv", encoding="gbk")
+test_input = pd.read_csv("../下载数据/比赛测试集.csv", encoding="gbk")
+#family_his = {"无记录":0, "叔叔或者姑姑有一方患有糖尿病":1, "叔叔或姑姑有一方患有糖尿病":1, "父母有一方患有糖尿病":2}
+train_input, train_output = train_df.loc[:, "性别": "肱三头肌皮褶厚度"], train_df.loc[:, "患有糖尿病标识"]
+test_input = test_input.loc[:, "性别": "肱三头肌皮褶厚度"]
+
+#预处理
+train_input[["糖尿病家族史", "糖尿病家族史1", "糖尿病家族史2", "糖尿病家族史3"]] = pd.get_dummies(train_input["糖尿病家族史"])
+test_input[["糖尿病家族史", "糖尿病家族史1", "糖尿病家族史2", "糖尿病家族史3"]] = pd.get_dummies(test_input["糖尿病家族史"])
+train_input["舒张压"].fillna(train_input["舒张压"].mean(),  inplace=True)
+test_input["舒张压"].fillna(train_input["舒张压"].mean(),  inplace=True)
+print(train_input.shape, test_input.shape)
+train_x, train_y = train_input[0:4000], train_output[0:4000]
+valid_x, valid_y = train_input[4000:], train_output[4000:]
+
+#逻辑回归训练
+clf = LogisticRegressionCV(random_state=0,penalty='l2', solver='lbfgs', Cs=2,  max_iter=5000).fit(train_x, train_y)
+#clf.predict(valid_x)
+print(clf.score(valid_x, valid_y))
+
+#测试集测试写回
+test_input['label'] = clf.predict(test_input)
+test_input["uuid"] = range(1,len(test_input)+1)
+test_input[["uuid", "label"]].to_csv('submit.csv', index=None)
+
+
+
+
+
+
+
