@@ -30,3 +30,21 @@ ID	状态	评分	提交文件名	提交备注	提交者	提交时间	操作
 4	返回分数	0.7154	submit.csv	第一次提交比赛结果，查看baseline有效性	Matrix战队	2022-06-28 22:47:14	
 
 步骤4：思考字段含义，尝试新的特征，将你的尝试写入博客；
+尝试使用归一化特征，量纲相同，使准确率上升
+scaler = MinMaxScaler()
+X_train_minmax = scaler.fit_transform(train_input['舒张压'].to_numpy().reshape(-1, 1))
+train_input['舒张压'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(train_input['体重指数'].to_numpy().reshape(-1, 1))
+train_input['体重指数'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(train_input['肱三头肌皮褶厚度'].to_numpy().reshape(-1, 1))
+train_input['肱三头肌皮褶厚度'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(train_input['胰岛素释放实验'].to_numpy().reshape(-1, 1))
+train_input['胰岛素释放实验'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(test_input['舒张压'].to_numpy().reshape(-1, 1))
+test_input['舒张压'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(test_input['体重指数'].to_numpy().reshape(-1, 1))
+test_input['体重指数'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(test_input['肱三头肌皮褶厚度'].to_numpy().reshape(-1, 1))
+test_input['肱三头肌皮褶厚度'] = X_train_minmax.reshape(-1, 1)
+X_train_minmax = scaler.fit_transform(test_input['胰岛素释放实验'].to_numpy().reshape(-1, 1))
+test_input['胰岛素释放实验'] = X_train_minmax.reshape(-1, 1)
