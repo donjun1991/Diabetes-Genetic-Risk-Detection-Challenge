@@ -1,0 +1,30 @@
+train_input_mean  = tmp_train_input.groupby('性别').mean()
+效果：
+性别    出生年份	    体重指数	舒张压	    口服耐糖量测试	 胰岛素释放实验	肱三头肌皮褶厚度			
+0	     1987.847131	37.197603	88.786209	5.589110	    4.543166	      6.818656
+1	     1985.706390	38.925216	90.181523	5.641056	    3.604374	      7.203316
+
+步骤2：计算每个患者与每个性别平均值的差异；
+代码
+group_girl.loc[:,'体重指数偏差']=group_girl.loc[:,'体重指数'].apply(lambda x :abs(x - train_input_mean.loc[1,'体重指数']))
+group_boy = grouped.get_group(0)
+group_boy.loc[:,'体重指数偏差']=group_boy.loc[:,'体重指数'].apply(lambda x :abs(x - train_input_mean.loc[0,'体重指数']))
+train_input["体重指数偏差"] = pd.concat([group_boy, group_girl]).loc[:, '体重指数偏差']
+
+步骤3：在上述基础上将训练集20%划分为验证集，使用逻辑回归完成训练，精度是否有提高？
+代码：
+#四、划分交叉验证集
+train_x, train_y = train_input[0:4000], train_output[0:4000]
+valid_x, valid_y = train_input[4000:], train_output[4000:]
+
+#五、逻辑回归训练
+clf = LogisticRegressionCV(random_state=0,penalty='l2', solver='lbfgs', Cs=10,  max_iter=5000).fit(train_x, train_y)
+print(clf.score(valid_x, valid_y))
+效果：
+ID	状态	评分	提交文件名	提交备注	提交者	提交时间	操作
+1	返回分数	0.76684	submit.csv		Matrix战队	2022-06-30 17:04:09	
+2	返回分数	0.76416	submit.csv		Matrix战队	2022-06-30 13:31:36	
+3	返回分数	0.72302	submit.csv	使用了验证集	Matrix战队	2022-06-29 16:50:50	
+4	返回分数	0.7154	submit.csv	第一次提交比赛结果，查看baseline有效性	Matrix战队	2022-06-28 22:47:14	
+
+步骤4：思考字段含义，尝试新的特征，将你的尝试写入博客；
