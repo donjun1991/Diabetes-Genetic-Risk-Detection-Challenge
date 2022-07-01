@@ -1,4 +1,42 @@
 步骤1：使用树模型完成模型的训练，通过特征重要性筛选出Top5的特征；
+代码：
+#随机森林筛选重要特征
+forest = RandomForestClassifier(n_estimators=1000, random_state=0,n_jobs=1)
+forest.fit(train_x, train_y)
+importance = forest.feature_importances_
+importance_data = pd.DataFrame(importance,columns=["importance"])
+importance_data = importance_data.sort_values("importance",ascending=False)
+# importance_1 = importance_data[importance_data.importance>=0.01]
+importance_1 = importance_data[0:5]
+print(importance_1)
+train_x =  train_x.iloc[:,importance_1.index]
+valid_x =  valid_x.iloc[:,importance_1.index]
+forest.fit(train_x, train_y)
+print(forest.score(valid_x, valid_y))
+效果：
+   importance
+2    0.278586
+6    0.125326
+8    0.115052
+4    0.106707
+7    0.077230
+
 步骤2：使用筛选出的特征和逻辑回归进行训练，在验证集精度是否有提高？
+没有提高
 步骤3：如果有提高，为什么？如果没有提高，为什么？
-步骤4：将你的尝试写入博客；
+没有提高，筛选出来的重要性大于0.01的特征如下，因为特征本身比较少，总共13个，同时每一个特征重要性都几乎大于0.01， 剔除每一个特征都会影响精度，所以不会提高
+    importance
+2     0.270578
+9     0.121558
+7     0.119132
+5     0.105486
+8     0.083523
+4     0.054726
+6     0.053892
+11    0.052872
+10    0.048273
+13    0.046472
+1     0.017135
+12    0.016738
+
+
